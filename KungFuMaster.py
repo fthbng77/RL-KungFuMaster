@@ -67,7 +67,7 @@ class DQN:
         if len(self.replay_memory_buffer) < self.batch_size or self.counter != 0:
             return
         
-        #ödül 180'den fazla ise öğrenim sürecini durdurmaya yarar.	 
+        #ödül 28000'den fazla ise öğrenim sürecini durdurmaya yarar.	 
         # Early Stopping
         if np.mean(self.rewards_list[-10:]) > 28000:
             return
@@ -285,7 +285,7 @@ def run_experiment_for_lr():
     for i in range(len(lr_values)):
         col_name = "lr="+ str(lr_values[i])
         lr_rewards_pd[col_name] = rewards_list_for_lrs[i]
-    plot_experiments(lr_rewards_pd, "Figure 3: Rewards per episode for different learning rates", "Figure 3: Rewards per episode for different learning rates", "Episodes", "Reward", (-2000, 300))
+    plot_experiments(lr_rewards_pd, "Figure 3: Rewards per episode for different learning rates", "Figure 3: Rewards per episode for different learning rates", "Episodes", "Reward", (-10, 30000))
 
 
 def run_experiment_for_ed():
@@ -318,7 +318,7 @@ def run_experiment_for_ed():
     for i in range(len(ed_values)):
         col_name = "epsilon_decay = "+ str(ed_values[i])
         ed_rewards_pd[col_name] = rewards_list_for_ed[i]
-    plot_experiments(ed_rewards_pd, "Figure 5: Rewards per episode for different epsilon(ε) decay", "Figure 5: Rewards per episode for different epsilon(ε) decay values", "Episodes", "Reward", (-600, 300))
+    plot_experiments(ed_rewards_pd, "Figure 5: Rewards per episode for different epsilon(ε) decay", "Figure 5: Rewards per episode for different epsilon(ε) decay values", "Episodes", "Reward", (-10, 30000))
 
 
 
