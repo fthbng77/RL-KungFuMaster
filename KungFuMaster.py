@@ -254,7 +254,7 @@ def run_experiment_for_gamma():
         col_name = "gamma=" + str(gamma_list[i])
         gamma_rewards_pd[col_name] = rewards_list_for_gammas[i]
     plot_experiments(gamma_rewards_pd, "Figure 4: Rewards per episode for different gamma values",
-                     "Figure 4: Rewards per episode for different gamma values", "Episodes", "Reward", (-600, 300))
+                     "Figure 4: Rewards per episode for different gamma values", "Episodes", "Reward", (-10, 30000))
 
 
 def run_experiment_for_lr():
