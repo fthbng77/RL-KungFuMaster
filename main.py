@@ -16,7 +16,7 @@ def main():
     model = DQN(env, config.lr, config.gamma, config.epsilon, config.epsilon_decay)
     
     print("Starting training for DQN model...")
-    model.train(config.training_episodes, True)
+    model.train(config.training_episodes)
 
     # Modeli kaydet
     save_dir = "saved_models/"

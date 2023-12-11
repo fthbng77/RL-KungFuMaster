@@ -26,7 +26,7 @@ class DQN:
         model.add(Dense(512, input_dim=self.num_observation_space, activation=relu))
         model.add(Dense(256, activation=relu))
         model.add(Dense(self.num_action_space, activation=linear))
-        model.compile(loss=mean_squared_error, optimizer=Adam(lr=self.lr))
+        model.compile(loss=mean_squared_error, optimizer=Adam(learning_rate=self.lr))
         return model
 
     def get_action(self, state):
@@ -63,17 +63,30 @@ class DQN:
     def get_random_sample_from_replay_mem(self):
         return random.sample(self.replay_memory_buffer, self.batch_size)
 
-    def train(self, num_episodes):
+    def train(self, num_episodes, can_stop=True):
         rewards_list = []
         for episode in range(num_episodes):
-            state = self.env.reset()
-            state = np.reshape(state, [1, self.num_observation_space])
+            initial_state = self.env.reset()
+            state = initial_state[0] if isinstance(initial_state, tuple) else initial_state
+            state_flattened = state.flatten()
+            state = np.reshape(state_flattened, [1, self.num_observation_space])
+
+            print(f"Initial state shape after flattening and reshaping: {state.shape}")
             total_reward = 0
             done = False
             while not done:
                 action = self.get_action(state)
-                next_state, reward, done, _ = self.env.step(action)
-                next_state = np.reshape(next_state, [1, self.num_observation_space])
+                step_result = self.env.step(action)
+
+                # step_result'dan gerekli öğeleri al
+                next_state = step_result[0]
+                reward = step_result[1]
+                done = step_result[2]
+
+                # next_state'i düzleştir ve işle
+                next_state_flattened = next_state.flatten()
+                next_state = np.reshape(next_state_flattened, [1, self.num_observation_space])
+
                 self.add_to_replay_memory(state, action, reward, next_state, done)
                 state = next_state
                 total_reward += reward
