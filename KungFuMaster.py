@@ -2,16 +2,15 @@ import gym
 import numpy as np
 import pandas as pd
 from collections import deque
-from keras import Sequential
-from keras.layers import Dense
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense
 import random
-from keras.activations import relu, linear
-from keras.losses import mean_squared_error
-from keras.optimizers import Adam
+from tensorflow.keras.activations import relu, linear
+from tensorflow.keras.losses import mean_squared_error
+from tensorflow.keras.optimizers import Adam
 from keras.models import load_model
 import pickle
 from matplotlib import pyplot as plt
-
 
 class DQN:
     def __init__(self, env, lr, gamma, epsilon, epsilon_decay):
