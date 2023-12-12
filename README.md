@@ -12,3 +12,14 @@ requirement file needs to be installed:
 ```
 pip install -r requirements.txt
 ```
+
+if you want to control via wandb:
+
+```
+pip install wandb
+
+wandb login
+```
+
+![wandb_data](imgs/data.png)
+
