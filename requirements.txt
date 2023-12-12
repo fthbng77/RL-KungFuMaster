@@ -4,4 +4,6 @@ gym
 pandas
 keras
 tensorflow
+stable-baselines3
+atari_py
 gym[accept-rom-license]
