@@ -62,7 +62,12 @@ class DQN:
 
     def get_random_sample_from_replay_mem(self):
         return random.sample(self.replay_memory_buffer, self.batch_size)
-
+    
+    def save_training_progress(self, rewards_list, episode, epsilon):
+        # İlerlemeyi bir dosyaya kaydet
+        with open('training_progress.txt', 'a') as file:
+            file.write(f'Episode: {episode}, Average Reward: {sum(rewards_list)/len(rewards_list)}, Epsilon: {epsilon}\n')
+    
     def train(self, num_episodes, can_stop=True):
         rewards_list = []
         for episode in range(num_episodes):
@@ -71,29 +76,39 @@ class DQN:
             state_flattened = state.flatten()
             state = np.reshape(state_flattened, [1, self.num_observation_space])
 
-            print(f"Initial state shape after flattening and reshaping: {state.shape}")
             total_reward = 0
             done = False
+            step = 0  # Adım sayacını sıfırla
             while not done:
                 action = self.get_action(state)
                 step_result = self.env.step(action)
 
-                # step_result'dan gerekli öğeleri al
                 next_state = step_result[0]
                 reward = step_result[1]
                 done = step_result[2]
 
-                # next_state'i düzleştir ve işle
                 next_state_flattened = next_state.flatten()
                 next_state = np.reshape(next_state_flattened, [1, self.num_observation_space])
 
                 self.add_to_replay_memory(state, action, reward, next_state, done)
                 state = next_state
                 total_reward += reward
+
                 self.learn_and_update_weights_by_reply()
+
+                step += 1  # Adım sayısını artır
+                if step % 100 == 0:  # Her 100 adımda bir güncelleme yazdır
+                    print(f"Episode: {episode}, Step: {step}, Total Reward: {total_reward}")
+
                 if done:
                     break
+
             rewards_list.append(total_reward)
             self.epsilon = max(self.epsilon_min, self.epsilon * self.epsilon_decay)
+
             print(f"Episode: {episode}, Total Reward: {total_reward}, Epsilon: {self.epsilon}")
+
+            if episode % 100 == 0 or episode == num_episodes - 1:
+                self.save_training_progress(rewards_list, episode, self.epsilon)
+
         return rewards_list
