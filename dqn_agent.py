@@ -1,12 +1,13 @@
 import numpy as np
+import random
+from collections import deque
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
 from tensorflow.keras.activations import relu, linear
 from tensorflow.keras.losses import mean_squared_error
 from tensorflow.keras.optimizers import Adam
-import random
-from collections import deque
-
+import config
+import wandb 
 class DQN:
     def __init__(self, env, lr, gamma, epsilon, epsilon_decay):
         self.env = env
@@ -48,7 +49,10 @@ class DQN:
         target_vec = self.model.predict_on_batch(states)
         indexes = np.array([i for i in range(self.batch_size)])
         target_vec[[indexes], [actions]] = targets
-        self.model.fit(states, target_vec, epochs=1, verbose=0)
+
+        history = self.model.fit(states, target_vec, epochs=1, verbose=0)
+        loss = history.history['loss'][0]
+        wandb.log({'Loss': loss})
 
     def get_attribues_from_sample(self, random_sample):
         states = np.array([i[0] for i in random_sample])
@@ -64,7 +68,6 @@ class DQN:
         return random.sample(self.replay_memory_buffer, self.batch_size)
     
     def save_training_progress(self, rewards_list, episode, epsilon):
-        # İlerlemeyi bir dosyaya kaydet
         with open('training_progress.txt', 'a') as file:
             file.write(f'Episode: {episode}, Average Reward: {sum(rewards_list)/len(rewards_list)}, Epsilon: {epsilon}\n')
     
@@ -78,7 +81,7 @@ class DQN:
 
             total_reward = 0
             done = False
-            step = 0  # Adım sayacını sıfırla
+            step = 0
             while not done:
                 action = self.get_action(state)
                 step_result = self.env.step(action)
@@ -96,17 +99,20 @@ class DQN:
 
                 self.learn_and_update_weights_by_reply()
 
-                step += 1  # Adım sayısını artır
-                if step % 100 == 0:  # Her 100 adımda bir güncelleme yazdır
-                    print(f"Episode: {episode}, Step: {step}, Total Reward: {total_reward}")
+                step += 1
+                if step % 100 == 0:
+                    wandb.log({'Episode': episode, 'Step': step, 'Total Reward (Step)': total_reward})
 
                 if done:
                     break
 
             rewards_list.append(total_reward)
             self.epsilon = max(self.epsilon_min, self.epsilon * self.epsilon_decay)
-
-            print(f"Episode: {episode}, Total Reward: {total_reward}, Epsilon: {self.epsilon}")
+            wandb.log({'Episode': episode, 'Total Reward (Episode)': total_reward, 'Epsilon': self.epsilon})
+        # Erken durma koşulu
+            if can_stop and np.mean(rewards_list[-100:]) > config.some_threshold:
+                print(f"Erken durma koşulu {episode} bölümünde karşılandı.")
+                break
 
             if episode % 100 == 0 or episode == num_episodes - 1:
                 self.save_training_progress(rewards_list, episode, self.epsilon)
