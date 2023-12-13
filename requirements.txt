@@ -8,3 +8,4 @@ stable-baselines3
 atari_py
 gym[accept-rom-license]
 wandb
+gym[atari]

@@ -18,6 +18,7 @@ class DQN:
         self.replay_memory_buffer = deque(maxlen=500000)
         self.batch_size = 64
         self.epsilon_min = 0.01
+        self.num_envs = env.num_envs
         self.num_action_space = env.action_space.n
         self.num_observation_space = np.prod(env.observation_space.shape)
         self.model = self.initialize_model()
@@ -30,11 +31,15 @@ class DQN:
         model.compile(loss=mean_squared_error, optimizer=Adam(learning_rate=self.lr))
         return model
 
-    def get_action(self, state):
-        if np.random.rand() < self.epsilon:
-            return random.randrange(self.num_action_space)
-        predicted_actions = self.model.predict(state)
-        return np.argmax(predicted_actions[0])
+    def get_action(self, states):
+        actions = []
+        for state in states:
+            if np.random.rand() < self.epsilon:
+                actions.append(random.randrange(self.num_action_space))
+            else:
+                predicted_actions = self.model.predict(state)
+                actions.append(np.argmax(predicted_actions[0]))
+        return actions
 
     def add_to_replay_memory(self, state, action, reward, next_state, done):
         self.replay_memory_buffer.append((state, action, reward, next_state, done))
@@ -72,45 +77,51 @@ class DQN:
             file.write(f'Episode: {episode}, Average Reward: {sum(rewards_list)/len(rewards_list)}, Epsilon: {epsilon}\n')
     
     def train(self, num_episodes, can_stop=True):
-        rewards_list = []
+        rewards_list = [[] for _ in range(self.num_envs)]
         for episode in range(num_episodes):
-            initial_state = self.env.reset()
-            state = initial_state[0] if isinstance(initial_state, tuple) else initial_state
-            state_flattened = state.flatten()
-            state = np.reshape(state_flattened, [1, self.num_observation_space])
+            states = self.env.reset()  # Tüm ortamları sıfırla
+            states = np.array([np.reshape(state.flatten(), [1, self.num_observation_space]) for state in states])
 
-            total_reward = 0
-            done = False
+            total_rewards = [0 for _ in range(self.num_envs)]
+            dones = [False for _ in range(self.num_envs)]
+
             step = 0
-            while not done:
-                action = self.get_action(state)
-                step_result = self.env.step(action)
+            while not all(dones):
+                actions = self.get_action(states)  # Her ortam için ayrı bir eylem seç
+                next_states, rewards, dones, _ = self.env.step(actions)
 
-                next_state = step_result[0]
-                reward = step_result[1]
-                done = step_result[2]
+                # Her ortam için verileri işle
+                for i in range(self.num_envs):
+                    state = states[i]
+                    action = actions[i]
+                    reward = rewards[i]
+                    next_state = next_states[i]
+                    done = dones[i]
 
-                next_state_flattened = next_state.flatten()
-                next_state = np.reshape(next_state_flattened, [1, self.num_observation_space])
+                    next_state = np.reshape(next_state.flatten(), [1, self.num_observation_space])
 
-                self.add_to_replay_memory(state, action, reward, next_state, done)
-                state = next_state
-                total_reward += reward
+                    self.add_to_replay_memory(state, action, reward, next_state, done)
+                    total_rewards[i] += reward
 
+                    if step % 100 == 0:
+                        wandb.log({'Episode': episode, 'Env': i, 'Step': step, 'Total Reward (Step)': total_rewards[i]})
+
+                states = np.array([np.reshape(state.flatten(), [1, self.num_observation_space]) for state in next_states])
                 self.learn_and_update_weights_by_reply()
-
                 step += 1
+
                 if step % 100 == 0:
-                    wandb.log({'Episode': episode, 'Step': step, 'Total Reward (Step)': total_reward})
+                    for i in range(self.num_envs):
+                        wandb.log({'Episode': episode, 'Env': i, 'Total Reward (Episode)': total_rewards[i]})
 
-                if done:
-                    break
+            for i in range(self.num_envs):
+                rewards_list[i].append(total_rewards[i])
+                wandb.log({'Episode': episode, 'Env': i, 'Total Reward (Episode)': total_rewards[i]})
 
-            rewards_list.append(total_reward)
-            self.epsilon = max(self.epsilon_min, self.epsilon * self.epsilon_decay)
-            wandb.log({'Episode': episode, 'Total Reward (Episode)': total_reward, 'Epsilon': self.epsilon})
-        # Erken durma koşulu
-            if can_stop and np.mean(rewards_list[-100:]) > config.some_threshold:
+            self.epsilon = max(self.epsilon_min, self.epsilon * self.epsilon_decay)  # Epsilon güncelleme
+
+            # Erken durma koşulu
+            if can_stop and all(np.mean(rewards[-100:]) > config.some_threshold for rewards in rewards_list):
                 print(f"Erken durma koşulu {episode} bölümünde karşılandı.")
                 break
 

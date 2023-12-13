@@ -25,4 +25,4 @@ jobs:
 
       - name: Run Colab Notebook
         run: |
-          jupyter nbconvert --to notebook --execute notebook/your_notebook.ipynb
+          jupyter nbconvert --to notebook --execute notebook/KungFuMaster.ipynb

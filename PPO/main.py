@@ -7,18 +7,25 @@ import numpy as np
 import config
 import pickle
 import pandas as pd
+from stable_baselines3.common.vec_env import DummyVecEnv
+
+def make_env():
+    def _init():
+        env = gym.make('ALE/KungFuMaster-v5', render_mode="rgb_array")
+        env.action_space.seed(42)
+        return env
+    return _init
 
 def main():
     # WandB yapılandırması
-    wandb.init(project='RKkungfumaster', entity='fth123bng')
+    wandb.init(project='RLkungfumaster', entity='fth123bng')
 
     # Gym ortamını başlat
-    env = gym.make('ALE/KungFuMaster-v5', render_mode="rgb_array")
-    env.action_space.seed(42)
-    np.random.seed(21)
+    envs = [make_env() for _ in range(config.num_envs)]
+    vec_env = DummyVecEnv(envs)
 
     # DQN modelini başlat
-    model = DQN(env, config.lr, config.gamma, config.epsilon, config.epsilon_decay)
+    model = DQN(vec_env, config.lr, config.gamma, config.epsilon, config.epsilon_decay)
     
     print("Starting training for DQN model...")
     training_rewards = model.train(config.training_episodes)
