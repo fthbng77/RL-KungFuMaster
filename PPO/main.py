@@ -17,7 +17,6 @@ def make_env():
     return _init
 
 def main():
-    # WandB yapılandırması
     wandb.init(project='RLkungfumaster', entity='fth123bng')
 
     # Gym ortamını başlat

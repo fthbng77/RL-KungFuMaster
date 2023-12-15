@@ -1,5 +1,5 @@
 # RL-KungFuMaster
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1pD5QawI53-2gp93nCmNu_Ygjy9rqwUhC?usp=sharing)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1NmZUWhBb4tHvCDjXcOgeOfGhoRxOTLfq?usp=sharing)
 
 Reinforcement Learning çalışmasıdır. Burada Atari 2600 oyununda olan ajanımız KungFuMaster DQN modeli kullanılarak eğitilmiştir
 
