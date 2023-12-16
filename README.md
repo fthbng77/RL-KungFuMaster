@@ -25,3 +25,5 @@ wandb login
 
 ![wandb_data](imgs/data.png)
 
+
+![wandb_data2](imgs/data2.png)
