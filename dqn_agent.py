@@ -1,5 +1,6 @@
 import numpy as np
 import random
+import tensorflow as tf
 from collections import deque
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
@@ -8,6 +9,13 @@ from tensorflow.keras.losses import mean_squared_error
 from tensorflow.keras.optimizers import Adam
 import config
 import wandb 
+
+if tf.test.is_gpu_available(cuda_only=True):
+    print("CUDA destekli GPU kullanılabilir.")
+else:
+    print("CUDA destekli GPU kullanılamıyor, CPU üzerinde çalışılacak.")
+
+
 class DQN:
     def __init__(self, env, lr, gamma, epsilon, epsilon_decay):
         self.env = env
@@ -23,11 +31,12 @@ class DQN:
         self.model = self.initialize_model()
 
     def initialize_model(self):
-        model = Sequential()
-        model.add(Dense(512, input_dim=self.num_observation_space, activation=relu))
-        model.add(Dense(256, activation=relu))
-        model.add(Dense(self.num_action_space, activation=linear))
-        model.compile(loss=mean_squared_error, optimizer=Adam(learning_rate=self.lr))
+        with tf.device('/GPU:0'):
+            model = Sequential()
+            model.add(Dense(512, input_dim=self.num_observation_space, activation=relu))
+            model.add(Dense(256, activation=relu))
+            model.add(Dense(self.num_action_space, activation=linear))
+            model.compile(loss=mean_squared_error, optimizer=Adam(learning_rate=self.lr))
         return model
 
     def get_action(self, state):
@@ -45,14 +54,21 @@ class DQN:
 
         random_sample = self.get_random_sample_from_replay_mem()
         states, actions, rewards, next_states, done_list = self.get_attribues_from_sample(random_sample)
-        targets = rewards + self.gamma * (np.amax(self.model.predict_on_batch(next_states), axis=1)) * (1 - done_list)
+
+        targets = np.zeros(self.batch_size)
+        for idx in range(self.batch_size):
+            Q_future_max = np.amax(self.model.predict_on_batch(next_states[idx:idx+1]))
+            targets[idx] = rewards[idx] if done_list[idx] else rewards[idx] + self.gamma * Q_future_max
+
         target_vec = self.model.predict_on_batch(states)
-        indexes = np.array([i for i in range(self.batch_size)])
-        target_vec[[indexes], [actions]] = targets
+        for idx, action in enumerate(actions):
+            target_vec[idx, action] = targets[idx]
 
         history = self.model.fit(states, target_vec, epochs=1, verbose=0)
         loss = history.history['loss'][0]
         wandb.log({'Loss': loss})
+
+
 
     def get_attribues_from_sample(self, random_sample):
         states = np.array([i[0] for i in random_sample])
@@ -84,7 +100,7 @@ class DQN:
             step = 0
             while not done:
                 action = self.get_action(state)
-                step_result = self.env.step(action)
+                step_result = self.env.step([action])
 
                 next_state = step_result[0]
                 reward = step_result[1]

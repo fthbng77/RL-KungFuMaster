@@ -2,7 +2,7 @@
 import wandb
 from dqn_agent import DQN
 from utils import plot_df, save_model
-import gym
+import gymnasium as gym
 import numpy as np
 import config
 import pickle

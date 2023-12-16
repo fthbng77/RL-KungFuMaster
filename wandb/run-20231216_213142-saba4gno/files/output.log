@@ -1,0 +1,62 @@
+
+Starting training for DQN model...
+Traceback (most recent call last):
+  File "main.py", line 48, in <module>
+    main()
+  File "main.py", line 31, in main
+    training_rewards = model.train(config.training_episodes)
+  File "/home/fatih/RL-KungFuMaster/dqn_agent.py", line 108, in train
+    self.learn_and_update_weights_by_reply()
+  File "/home/fatih/RL-KungFuMaster/dqn_agent.py", line 59, in learn_and_update_weights_by_reply
+    history = self.model.fit(states, target_vec, epochs=1, verbose=0)
+  File "/home/fatih/.local/lib/python3.8/site-packages/keras/src/utils/traceback_utils.py", line 65, in error_handler
+    return fn(*args, **kwargs)
+  File "/home/fatih/.local/lib/python3.8/site-packages/keras/src/engine/training.py", line 1742, in fit
+    tmp_logs = self.train_function(iterator)
+  File "/home/fatih/.local/lib/python3.8/site-packages/tensorflow/python/util/traceback_utils.py", line 150, in error_handler
+    return fn(*args, **kwargs)
+  File "/home/fatih/.local/lib/python3.8/site-packages/tensorflow/python/eager/polymorphic_function/polymorphic_function.py", line 825, in __call__
+    result = self._call(*args, **kwds)
+  File "/home/fatih/.local/lib/python3.8/site-packages/tensorflow/python/eager/polymorphic_function/polymorphic_function.py", line 857, in _call
+    return self._no_variable_creation_fn(*args, **kwds)  # pylint: disable=not-callable
+  File "/home/fatih/.local/lib/python3.8/site-packages/tensorflow/python/eager/polymorphic_function/tracing_compiler.py", line 148, in __call__
+    return concrete_function._call_flat(
+  File "/home/fatih/.local/lib/python3.8/site-packages/tensorflow/python/eager/polymorphic_function/monomorphic_function.py", line 1349, in _call_flat
+    return self._build_call_outputs(self._inference_function(*args))
+  File "/home/fatih/.local/lib/python3.8/site-packages/tensorflow/python/eager/polymorphic_function/atomic_function.py", line 196, in __call__
+    outputs = self._bound_context.call_function(
+  File "/home/fatih/.local/lib/python3.8/site-packages/tensorflow/python/eager/context.py", line 1457, in call_function
+    outputs = execute.execute(
+  File "/home/fatih/.local/lib/python3.8/site-packages/tensorflow/python/eager/execute.py", line 53, in quick_execute
+    tensors = pywrap_tfe.TFE_Py_Execute(ctx._handle, device_name, op_name,
+KeyboardInterrupt
+Traceback (most recent call last):
+  File "main.py", line 48, in <module>
+    main()
+  File "main.py", line 31, in main
+    training_rewards = model.train(config.training_episodes)
+  File "/home/fatih/RL-KungFuMaster/dqn_agent.py", line 108, in train
+    self.learn_and_update_weights_by_reply()
+  File "/home/fatih/RL-KungFuMaster/dqn_agent.py", line 59, in learn_and_update_weights_by_reply
+    history = self.model.fit(states, target_vec, epochs=1, verbose=0)
+  File "/home/fatih/.local/lib/python3.8/site-packages/keras/src/utils/traceback_utils.py", line 65, in error_handler
+    return fn(*args, **kwargs)
+  File "/home/fatih/.local/lib/python3.8/site-packages/keras/src/engine/training.py", line 1742, in fit
+    tmp_logs = self.train_function(iterator)
+  File "/home/fatih/.local/lib/python3.8/site-packages/tensorflow/python/util/traceback_utils.py", line 150, in error_handler
+    return fn(*args, **kwargs)
+  File "/home/fatih/.local/lib/python3.8/site-packages/tensorflow/python/eager/polymorphic_function/polymorphic_function.py", line 825, in __call__
+    result = self._call(*args, **kwds)
+  File "/home/fatih/.local/lib/python3.8/site-packages/tensorflow/python/eager/polymorphic_function/polymorphic_function.py", line 857, in _call
+    return self._no_variable_creation_fn(*args, **kwds)  # pylint: disable=not-callable
+  File "/home/fatih/.local/lib/python3.8/site-packages/tensorflow/python/eager/polymorphic_function/tracing_compiler.py", line 148, in __call__
+    return concrete_function._call_flat(
+  File "/home/fatih/.local/lib/python3.8/site-packages/tensorflow/python/eager/polymorphic_function/monomorphic_function.py", line 1349, in _call_flat
+    return self._build_call_outputs(self._inference_function(*args))
+  File "/home/fatih/.local/lib/python3.8/site-packages/tensorflow/python/eager/polymorphic_function/atomic_function.py", line 196, in __call__
+    outputs = self._bound_context.call_function(
+  File "/home/fatih/.local/lib/python3.8/site-packages/tensorflow/python/eager/context.py", line 1457, in call_function
+    outputs = execute.execute(
+  File "/home/fatih/.local/lib/python3.8/site-packages/tensorflow/python/eager/execute.py", line 53, in quick_execute
+    tensors = pywrap_tfe.TFE_Py_Execute(ctx._handle, device_name, op_name,
+KeyboardInterrupt

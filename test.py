@@ -1,7 +1,7 @@
 # test.py
 from utils import load_trained_model
 from utils import plot_df, load_trained_model
-import gym
+import gymnasium as gym
 import numpy as np
 import config
 import pickle

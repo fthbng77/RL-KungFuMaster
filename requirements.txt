@@ -1,11 +1,11 @@
 ﻿numpy
 scipy
-gym
+gymnasium
 pandas
 keras
 tensorflow
 stable-baselines3
 atari_py
-gym[accept-rom-license]
+gymnasium[accept-rom-license]
 wandb
-gym[atari]
+gymnasium[atari]

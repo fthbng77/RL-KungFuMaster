@@ -1,0 +1,108 @@
+{
+    "os": "Linux-5.15.0-91-generic-x86_64-with-glibc2.29",
+    "python": "3.8.10",
+    "heartbeatAt": "2023-12-16T18:58:10.939372",
+    "startedAt": "2023-12-16T18:58:00.298774",
+    "docker": null,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "program": "main.py",
+    "codePathLocal": "main.py",
+    "codePath": "main.py",
+    "git": {
+        "remote": "https://github.com/fthbng77/RL-KungFuMaster.git",
+        "commit": "92802b6ee417faf37d6a57c17c94440f044f76c3"
+    },
+    "email": "fatihbing38@gmail.com",
+    "root": "/home/fatih/RL-KungFuMaster",
+    "host": "fatih",
+    "username": "fatih",
+    "executable": "/usr/bin/python",
+    "cpu_count": 8,
+    "cpu_count_logical": 12,
+    "cpu_freq": {
+        "current": 2540.9511666666667,
+        "min": 400.0,
+        "max": 4033.3333333333335
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 2500.0,
+            "min": 400.0,
+            "max": 4400.0
+        },
+        {
+            "current": 2500.0,
+            "min": 400.0,
+            "max": 4400.0
+        },
+        {
+            "current": 2500.0,
+            "min": 400.0,
+            "max": 4400.0
+        },
+        {
+            "current": 2500.0,
+            "min": 400.0,
+            "max": 4400.0
+        },
+        {
+            "current": 2500.0,
+            "min": 400.0,
+            "max": 4400.0
+        },
+        {
+            "current": 2500.0,
+            "min": 400.0,
+            "max": 4400.0
+        },
+        {
+            "current": 2798.932,
+            "min": 400.0,
+            "max": 4400.0
+        },
+        {
+            "current": 2500.0,
+            "min": 400.0,
+            "max": 4400.0
+        },
+        {
+            "current": 2500.0,
+            "min": 400.0,
+            "max": 3300.0
+        },
+        {
+            "current": 2500.0,
+            "min": 400.0,
+            "max": 3300.0
+        },
+        {
+            "current": 2500.0,
+            "min": 400.0,
+            "max": 3300.0
+        },
+        {
+            "current": 2500.0,
+            "min": 400.0,
+            "max": 3300.0
+        }
+    ],
+    "disk": {
+        "/": {
+            "total": 915.3232879638672,
+            "used": 94.20356750488281
+        }
+    },
+    "gpu": "NVIDIA GeForce RTX 4060 Laptop GPU",
+    "gpu_count": 1,
+    "gpu_devices": [
+        {
+            "name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+            "memory_total": 8585740288
+        }
+    ],
+    "memory": {
+        "total": 31.07642364501953
+    }
+}
