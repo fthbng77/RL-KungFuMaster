@@ -1,7 +1,7 @@
 # RL-KungFuMaster
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1NmZUWhBb4tHvCDjXcOgeOfGhoRxOTLfq?usp=sharing)
 
-Reinforcement Learning çalışmasıdır. Burada Atari 2600 oyununda olan ajanımız KungFuMaster DQN modeli kullanılarak eğitilmiştir
+Reinforcement Learning çalışmasıdır. Burada Atari 2600 oyununda olan ajanımız KungFuMaster DQN modeli kullanılarak eğitilmiştir. Ubuntu 20.04 üzerinde çalışılmıştır.
 
 ```
 cd RL-KungFuMaster
